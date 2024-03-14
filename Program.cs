@@ -4,14 +4,21 @@
 * Final Project 
 * A Health app to help you stay healthy.
 */
+using System.Reflection;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.RegularExpressions;
 
 namespace COMP003A.FinalProject
 {
     internal class Program
     {
+        private static int FirstName;
+
+        public static string? LastName { get; private set; }
+
         static void Main(string[] args)
         {
+            
             /// 
             ///
             Console.Title = "How is your Health?";
@@ -19,90 +26,115 @@ namespace COMP003A.FinalProject
             Console.BackgroundColor = ConsoleColor.DarkBlue;
             ///
             Console.ForegroundColor = ConsoleColor.White;
-            ///
-
-            //Integers for form application
-            string firstName;
-
-            string lastName;
-
-            string gender;
-
-            int YourAge = 0;
-            DateTime today = DateTime.Today;
-
             //Lists and arrays for application
             List<string> identityInfo = new List<string>();
             string[] questions = QuestionList();
             string[] answers = new string[10];
 
             //Beginning of form
-            SectionSeparator("***We are going to assess your health ***");
+            SectionSeparator("\t\t--- We are going to assess your health ---");
 
             //Personal Info Questions Section
             SectionSeparator("\t\t\tPersonal Info");
+            GetFullName();
+            GetGender();
+            GetAge();
 
-            //Get first name
+
+            // TODO: refactor this section to use a method
+            //Questionnaire section
+            SectionSeparator("\t\t\tQuestionnaire");
+            Console.WriteLine("Thank you for that Health information.\n");
+
+            //Questions to user and answers from user
+            answers = AskQ(QuestionList());
+
+            //Review section
+            SectionSeparator("\t\t\tReview");
+
+            //Provides review of info on screen.
+            Console.WriteLine("\nHere is your information...");
+
+            //Array traversal for questions and answer review
+            for (int i = 0; i < 10; i++)
+            {
+                Console.WriteLine($"Question {i + 1} was\n{questions[i]}");
+                Console.WriteLine($"Your response to Question {i + 1}.......{answers[i]}\n");
+            }
+
+            //Method to determine if you are held for further questioning
+            HoldForFurtherQuestions();
+        }
+        //-------------------------Main End---------------------------------//
+
+
+        //----------------------Module Section------------------------------//
+
+        static string GetFullName()
+        {
+            string FullName = FirstName + " "
+                + LastName;
+            Console.Write("What is your first name? ");
             do
             {
-                Console.Write("What is your first name? ");
-                firstName = Console.ReadLine();
-                if (NameInvalid(firstName) == true)
+                string FirstName = Console.ReadLine();
+                if (NameInvalid(FirstName))
                 {
-                    Console.WriteLine("Input invalid. Try again.");
+                    Answered();
                 }
 
-            } while (NameInvalid(firstName) == true);
-            identityInfo.Add(firstName);
+            } while (NameInvalid(FirstName) == true);
 
+            Console.Write("What is your last name? ");
+            do
+            {
+                string LastName = Console.ReadLine();
+                if (NameInvalid(LastName) == true)
+                {
+                    Answered();
+                }
 
-            //Get last name
+            } while (NameInvalid(LastName) == true);
+
+            return FullName;
+        }
+        public static string Answered() {
+            string Input = Console.ReadLine();
+
+            try
+            {
+                 = ;
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Invalid input. Try again");
+                gender = "";
+            }
+
 
             do
             {
-                Console.Write("What is your last name? ");
-                lastName = Console.ReadLine();
-                if (NameInvalid(lastName) == true)
-                {
-                    Console.WriteLine("Input invalid. Try again.");
+                if (NameInvalid(Input){
+                    return e.messeage;
                 }
+            }while (NameInvalid(Input) == true);
+            return Input;
+        }
+        
+        private static bool NameInvalid(int firstName)
+        {
+            throw new NotImplementedException();
+        }
+        public static string GetGender() {
 
-            } while (NameInvalid(lastName) == true);
-            identityInfo.Add(lastName);
-
-
-
-            //Get year born
+            // Here we ask what is your gender.
+            Console.WriteLine($"What is your gender:\nEnter M for Male " +
+                                $"| F for Female | O for Other");
+            string gender = Console.ReadLine();
             do
             {
-                Console.WriteLine($"What year were you born? ");
-
-                try
-                {
-                    YourAge = Convert.ToInt32(Console.ReadLine());
-                }
-
-                catch (Exception)
-                {
-                    YourAge = 0;
-                }
-
-                if (YearInRange(YourAge) == false)
-                {
-                    Console.WriteLine("Invalid input. Try again");
-                }
-
-            } while (YearInRange(YourAge) == false);
-
-
-
-            //Gender selection    
-            do
-            {
-                // Here we ask what is your gender.
-                Console.WriteLine($"What is your gender:\nEnter M for Male " +
-                                    $"| F for Female | O for Other");
-                gender = Console.ReadLine();
+                
+               
                 gender = gender.ToUpper();
                 char genderAnswer = '0';
                 //=======First check on response to gender is if Empty or Null.
@@ -128,13 +160,13 @@ namespace COMP003A.FinalProject
                     {
                         // Here we get the answer to gender
                         case 'F':
-                            identityInfo.Add("Female");
+                            Console.Write("Female");
                             break;
                         case 'M':
-                            identityInfo.Add("Male");
+                            Console.Write("Male");
                             break;
                         case 'O':
-                            identityInfo.Add("Other");
+                            Console.Write("Other");
                             break;
                         default:
                             Console.WriteLine("Can you please try again");
@@ -145,51 +177,55 @@ namespace COMP003A.FinalProject
                 }
 
             } while (String.IsNullOrEmpty(gender) == true);
-
-
-
-            //Questionnaire section
-            SectionSeparator("\t\t\tQuestionnaire");
-            Console.WriteLine("Thank you for that Health information.\n");
-
-            //Questions to user and answers from user
-            answers = AskQ(QuestionList());
-
-            //Review section
-            SectionSeparator("\t\t\tReview");
-
-            //Provides review of info on screen.
-            Console.WriteLine("\nHere is your information...");
-            Console.WriteLine($"\n{identityInfo[1]}, {identityInfo[0]}");
-            Console.WriteLine($"Gender is {identityInfo[2]}");
-            Console.WriteLine($"Age: {AgeCalc(YourAge)} years old\n");
-
-            //Array traversal for questions and answer review
-            for (int i = 0; i < 10; i++)
-            {
-                Console.WriteLine($"Question {i + 1} was\n{questions[i]}");
-                Console.WriteLine($"Your response to Question {i + 1}.......{answers[i]}\n");
-            }
-
-            //Method to determine if you are held for further questioning
-            HoldForFurtherQuestions();
+            return gender;
 
 
         }
-        //-------------------------Main End---------------------------------//
-
-
-        //----------------------Module Section------------------------------//
-
-
-
-        /// <summary>
-        /// Validates if user response contains numbers or special characters.
-        /// </summary>
-        /// <param name="response">User response</param>
-        /// <returns>True or false</returns>
-        static bool NameInvalid(string response)
+        // TODO: refactor this section to use a method
+        //Get year born
+        public static int GetAge()
         {
+            Console.WriteLine($"What year were you born? ");
+            int YourAge;
+            do
+            {
+                
+                /// string to intger
+
+                try
+                {
+                    YourAge = Convert.ToInt32(Console.ReadLine());
+                }
+
+                catch (Exception)
+                {
+                    YourAge = 0;
+                }
+
+                if (YearInRange(YourAge) == false)
+                {
+                    Console.WriteLine("Invalid input. Try again");
+                }
+
+            } while (YearInRange(YourAge) == false);
+            return YourAge;
+        }
+
+
+               
+                
+
+/// <summary>
+/// Validates if user response contains numbers or special characters.
+/// </summary>
+/// <param name="response">User response</param>
+/// <returns>True or false</returns>
+static bool NameInvalid(string response)
+        {
+            // TODO: what is the purpose of the code block below?
+            // TODO: what is the purpose of Regex.IsMatch(response, @"^[a-zA-z]+$")?
+            // TODO: what does response.Any() do?
+            // TODO: what does => expression do?
             if (String.IsNullOrEmpty(response) == true)
             {
                 return true;
@@ -215,6 +251,7 @@ namespace COMP003A.FinalProject
         {
             DateTime today = DateTime.Today;
 
+            // TODO: update these conditions to allow entries for 1900 and 2024
             if (year <= 1900 || year >= today.Year)
             {
                 return false;
@@ -233,9 +270,10 @@ namespace COMP003A.FinalProject
         static void SectionSeparator(string section)
         {
             Console.WriteLine("".PadRight(68, '*') + $"\n{section}\n" + "".
-           PadRight(68, '*'));
+           PadRight(68, '*')+ "\n");
         }
-
+        
+        // TODO: refactor this method name to be more descriptive
         /// <summary>
         /// Calculates age from year provided by user
         /// </summary>
@@ -269,6 +307,7 @@ namespace COMP003A.FinalProject
             return questionArray;
         }
 
+        // TODO: refactor this method name to be more descriptive
         /// <summary>
         /// Method to ask questions and record answers.
         /// </summary>
@@ -280,6 +319,7 @@ namespace COMP003A.FinalProject
             for (int i = 0; i < 10; i++)
             {
                 string userResponse = "";
+                // TODO: update the do-while condition to ALSO not allow whitespaces
                 do
                 {
                     Console.WriteLine($"Question {i + 1}: {questions[i]}");
@@ -307,7 +347,7 @@ namespace COMP003A.FinalProject
             }
             else
             {
-                Console.WriteLine("\n\t- You are Fine _");
+                Console.WriteLine("\n\t- You are Fine -");
             }
             Console.ReadKey();
         }
